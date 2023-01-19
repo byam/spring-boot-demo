@@ -1,5 +1,6 @@
 package edu.miu.spring.boot.demo.service;
 
+import edu.miu.spring.boot.demo.domain.Post;
 import edu.miu.spring.boot.demo.dto.PostDto;
 
 import java.util.List;
@@ -9,9 +10,9 @@ public interface PostService {
 
     PostDto getById(int id);
 
-    void save(PostDto postDto);
+    void save(Post post);
 
     void delete(int id);
 
-    void update(int id, PostDto postDto);
+    void update(int id, Post post);
 }

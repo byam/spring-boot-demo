@@ -1,5 +1,6 @@
 package edu.miu.spring.boot.demo.controller;
 
+import edu.miu.spring.boot.demo.domain.Post;
 import edu.miu.spring.boot.demo.dto.PostDto;
 import edu.miu.spring.boot.demo.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,8 @@ public class PostController {
     }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void save(@RequestBody PostDto postDto){
-        postService.save(postDto);
+    public void save(@RequestBody Post post){
+        postService.save(post);
     }
 
     @DeleteMapping("{id}")
@@ -43,7 +44,7 @@ public class PostController {
 
     @PutMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void update(@PathVariable int id, @RequestBody PostDto postDto){
-        postService.update(id, postDto);
+    public void update(@PathVariable int id, @RequestBody Post post){
+        postService.update(id, post);
     }
 }

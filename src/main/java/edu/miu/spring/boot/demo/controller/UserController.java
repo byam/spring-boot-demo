@@ -22,13 +22,7 @@ public class UserController{
 
     @RequestMapping()
     @ResponseStatus(HttpStatus.OK)
-    public List<User> findAll(@RequestParam(value = "postTitle", required = false) String postTitle){
-        return postTitle == null ? userService.findAll() : userService.findAllPostTitleEquals(postTitle);
-    }
-
-    @RequestMapping("/postNum")
-    @ResponseStatus(HttpStatus.OK)
-    public List<User> findAllPostNum(@RequestParam(value = "postsGreaterThan", required = false) Integer postNum){
+    public List<User> findAll(@RequestParam(value = "postsGreaterThan", required = false) Integer postNum){
         return postNum == null ? userService.findAll() : userService.findAllPostsGreaterThan(postNum);
     }
 

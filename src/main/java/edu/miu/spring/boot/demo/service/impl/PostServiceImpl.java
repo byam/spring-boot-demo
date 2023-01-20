@@ -29,7 +29,19 @@ public class PostServiceImpl implements PostService {
     ListMapper<Post, PostDto> listMapperPostToDto;
 
     @Override
-    public List<PostDto> findAll() {
+    public List<Post> findAll() {
+        List<Post> posts = new ArrayList<>();
+        postRepo.findAll().forEach(posts::add);
+        return posts;
+    }
+
+    @Override
+    public List<Post> findAllByTitleEquals(String title) {
+        return postRepo.findAllByTitleEquals(title);
+    }
+
+    @Override
+    public List<PostDto> findAllDto() {
         List<Post> posts = new ArrayList<>();
         postRepo.findAll().forEach(posts::add);
         return (List<PostDto>) listMapperPostToDto.mapList(posts, new PostDto());
@@ -41,7 +53,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostDto getById(int id) {
+    public PostDto findByIdDto(int id) {
         return modelMapper.map(postRepo.findById(id), PostDto.class);
     }
 

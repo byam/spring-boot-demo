@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,7 +25,14 @@ public class UserServiceImpl implements UserService {
     ListMapper<User, UserDto> listMapperUserDto;
 
     @Override
-    public List<UserDto> findAll() {
+    public List<User> findAll() {
+        List<User> users = new ArrayList<>();
+        userRepo.findAll().forEach(users::add);
+        return users;
+    }
+
+    @Override
+    public List<UserDto> findAllDto() {
         return (List<UserDto>) listMapperUserDto.mapList( (List<User>)userRepo.findAll(), new UserDto());
     }
 
@@ -52,5 +60,10 @@ public class UserServiceImpl implements UserService {
     public void update(int id, User user) {
         user.setId(id);
         userRepo.save(user);
+    }
+
+    @Override
+    public List<User> findAllPostsGreaterThan(int postNum) {
+        return userRepo.findUsersWithPosts(postNum);
     }
 }

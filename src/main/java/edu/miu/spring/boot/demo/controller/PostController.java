@@ -20,17 +20,30 @@ public class PostController {
         this.postService = postService;
     }
 
-    @GetMapping
+    @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public List<PostDto> getAll(){
-        return postService.findAll();
+    public List<Post> findAll(@RequestParam(value = "title", required = false) String title){
+        return title == null ? postService.findAll() : postService.findAllByTitleEquals(title);
+    }
+
+    @GetMapping("/dto")
+    @ResponseStatus(HttpStatus.OK)
+    public List<PostDto> findAllDto(){
+        return postService.findAllDto();
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public PostDto getById(@PathVariable int id){
-        return postService.getById(id);
+    public Post findById(@PathVariable int id){
+        return postService.findById(id);
     }
+
+    @GetMapping("/{id}/dto")
+    @ResponseStatus(HttpStatus.OK)
+    public PostDto findByIdDto(@PathVariable int id){
+        return postService.findByIdDto(id);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void save(@RequestBody Post post){

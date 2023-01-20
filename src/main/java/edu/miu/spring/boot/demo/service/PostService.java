@@ -7,11 +7,15 @@ import edu.miu.spring.boot.demo.dto.PostDto;
 import java.util.List;
 
 public interface PostService {
-    List<PostDto> findAll();
+    List<Post> findAll();
+
+    List<Post> findAllByTitleEquals(String title);
+
+    List<PostDto> findAllDto();
 
     Post findById(int id);
 
-    PostDto getById(int id);
+    PostDto findByIdDto(int id);
 
     void save(Post post);
 

@@ -3,7 +3,9 @@ package edu.miu.spring.boot.demo.controller;
 import edu.miu.spring.boot.demo.domain.Post;
 import edu.miu.spring.boot.demo.domain.User;
 import edu.miu.spring.boot.demo.dto.UserDto;
+import edu.miu.spring.boot.demo.repo.UserRepo;
 import edu.miu.spring.boot.demo.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,10 +21,16 @@ public class UserController{
         this.userService = userService;
     }
 
-    @RequestMapping
+    @RequestMapping()
     @ResponseStatus(HttpStatus.OK)
-    public List<UserDto> findAll(){
-        return userService.findAll();
+    public List<User> findAll(@RequestParam(value = "postsGreaterThan", required = false) Integer postNum){
+        return postNum == null ? userService.findAll() : userService.findAllPostsGreaterThan(postNum);
+    }
+
+    @RequestMapping("dto")
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserDto> findAllDto(){
+        return userService.findAllDto();
     }
 
     @RequestMapping("/{id}")

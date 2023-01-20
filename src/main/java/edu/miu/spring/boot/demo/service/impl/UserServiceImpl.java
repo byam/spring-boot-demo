@@ -66,4 +66,9 @@ public class UserServiceImpl implements UserService {
     public List<User> findAllPostsGreaterThan(int postNum) {
         return userRepo.findUsersWithPosts(postNum);
     }
+
+    @Override
+    public List<User> findAllPostTitleEquals(String postTitle) {
+        return userRepo.findAllByPostsContainingTitle(postTitle);
+    }
 }

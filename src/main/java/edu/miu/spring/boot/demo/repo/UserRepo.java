@@ -8,7 +8,12 @@ import java.util.List;
 
 public interface UserRepo extends CrudRepository<User, Integer> {
 
+    // #TODO FIXME
 //    @Query("select u from User u where u.posts.size >= :num")
     @Query("select u from User u where u.id >= :num")
     List<User> findUsersWithPosts(int num);
+
+    // #TODO FIXME
+    @Query("select u from User u")
+    List<User> findAllByPostsContainingTitle(String postTitle);
 }

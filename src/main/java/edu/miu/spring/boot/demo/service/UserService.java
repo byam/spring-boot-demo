@@ -21,4 +21,6 @@ public interface UserService {
     void update(int id, User user);
 
     List<User> findAllPostsGreaterThan(int postNum);
+
+    List<User> findAllPostTitleEquals(String postTitle);
 }

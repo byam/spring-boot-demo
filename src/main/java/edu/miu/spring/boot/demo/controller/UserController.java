@@ -22,8 +22,16 @@ public class UserController{
 
     @RequestMapping()
     @ResponseStatus(HttpStatus.OK)
-    public List<User> findAll(@RequestParam(value = "postsGreaterThan", required = false) Integer postNum){
-        return postNum == null ? userService.findAll() : userService.findAllPostsGreaterThan(postNum);
+    public List<User> findAll(
+            @RequestParam(value = "postsGreaterThan", required = false) Integer postNum,
+            @RequestParam(value = "hasPostTitle", required = false) String postTitle){
+
+        if (postNum != null)
+            return userService.findAllPostsGreaterThan(postNum);
+        if (postTitle != null)
+            return userService.findAllPostTitleEquals(postTitle);
+
+        return userService.findAll();
     }
 
     @RequestMapping("dto")

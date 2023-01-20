@@ -1,10 +1,15 @@
 package edu.miu.spring.boot.demo.service.impl;
 
+import edu.miu.spring.boot.demo.domain.Post;
 import edu.miu.spring.boot.demo.domain.User;
 import edu.miu.spring.boot.demo.dto.UserDto;
 import edu.miu.spring.boot.demo.helper.ListMapper;
 import edu.miu.spring.boot.demo.repo.UserRepo;
 import edu.miu.spring.boot.demo.service.UserService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +22,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
+
+    @PersistenceContext
+    EntityManager entityManager;
 
     @Autowired
     ModelMapper modelMapper;
@@ -69,6 +77,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAllPostTitleEquals(String postTitle) {
-        return userRepo.findAllByPostsContainingTitle(postTitle);
+        // setting table
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<User> cq = cb.createQuery(User.class);
+        Root<User> user = cq.from(User.class);
+        Join<User, Post> post = user.join("posts");
+        cq.select(user).distinct(true);
+
+        // setting conditions
+        Predicate titlePredicate = cb.like(post.get("title"), '%' + postTitle + '%');
+        cq.where(titlePredicate);
+
+        // executing queries
+        TypedQuery<User> query = entityManager.createQuery(cq);
+        return query.getResultList();
     }
 }

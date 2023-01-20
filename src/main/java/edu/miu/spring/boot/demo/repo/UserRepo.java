@@ -10,8 +10,4 @@ public interface UserRepo extends CrudRepository<User, Integer> {
 
     @Query("select u from User u where size(u.posts) >= :num")
     List<User> findUsersWithPosts(int num);
-
-    // #TODO FIXME
-    @Query("select u from User u")
-    List<User> findAllByPostsContainingTitle(String postTitle);
 }

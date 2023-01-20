@@ -1,5 +1,6 @@
 package edu.miu.spring.boot.demo.controller;
 
+import edu.miu.spring.boot.demo.domain.Comment;
 import edu.miu.spring.boot.demo.domain.Post;
 import edu.miu.spring.boot.demo.dto.PostDto;
 import edu.miu.spring.boot.demo.service.PostService;
@@ -46,5 +47,19 @@ public class PostController {
     @ResponseStatus(HttpStatus.OK)
     public void update(@PathVariable int id, @RequestBody Post post){
         postService.update(id, post);
+    }
+
+    @GetMapping("/{id}/comments")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Comment> findAllComment(@PathVariable int id){
+        var post = postService.findById(id);
+        if(post == null) return null;
+        return postService.findById(id).getComments();
+    }
+
+    @PostMapping("/{id}/comments")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void saveComment(@PathVariable int id, @RequestBody Comment comment){
+        postService.saveComment(id, comment);
     }
 }

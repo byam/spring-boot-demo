@@ -1,31 +1,59 @@
 package edu.miu.spring.boot.demo.aspect;
 
-import org.aspectj.lang.JoinPoint;
+import edu.miu.spring.boot.demo.entity.Logger;
+import edu.miu.spring.boot.demo.repo.LoggerRepo;
+import jakarta.servlet.http.HttpServletRequest;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.util.Arrays;
+import java.security.Principal;
+import java.time.LocalDateTime;
 
 @Aspect
 @Component
 public class LoggerAspect {
+
+    @Autowired
+    LoggerRepo loggerRepo;
+
     // Match the methods
     @Pointcut("execution( * edu.miu.spring.boot.demo.controller.*.*(..))")
     public void log(){
     }
 
     // Where to apply aspect
-    @AfterReturning("log()")
-    public void logAfterReturning(JoinPoint joinPoint){ // matched method
+    @Around("log()")
+    public Object logAround(ProceedingJoinPoint proceedingJoinPoint) throws Throwable { // matched method
         System.out.println(("======================================================="));
-        System.out.println("Log after the method: " + joinPoint.getSignature().getName());
-        System.out.println(joinPoint.getKind());
-        System.out.println(Arrays.toString(joinPoint.getArgs()));
-        System.out.println(joinPoint.getTarget());
-        System.out.println(joinPoint.getThis());
-        System.out.println(joinPoint.getSourceLocation());
-        System.out.println(joinPoint.getClass());
-        System.out.println(joinPoint.getStaticPart());
+
+        // proceed
+        Object result = proceedingJoinPoint.proceed();
+
+        // request info
+        HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+
+        // attributes
+        String userName = "staticUser";
+        Principal authUser = request.getUserPrincipal();
+        if (authUser != null) userName = authUser.getName();
+        String operation = String.format("%s.%s",
+                proceedingJoinPoint.getSignature().getDeclaringTypeName(),
+                proceedingJoinPoint.getSignature().getName());
+
+        // save
+        Logger logger = new Logger();
+        logger.setTransactionId(request.getHeader("transactionId"));
+        logger.setDateTime(LocalDateTime.now()); // current datetime
+        logger.setPrinciple(userName);
+        logger.setOperation(operation);
+        loggerRepo.save(logger);
+
+        System.out.println("Saved Logger to DB");
         System.out.println(("======================================================="));
+        return result;
     }
 }

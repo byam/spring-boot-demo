@@ -1,6 +1,8 @@
 package edu.miu.spring.boot.demo.aspect;
 
+import edu.miu.spring.boot.demo.entity.Exception;
 import edu.miu.spring.boot.demo.entity.Logger;
+import edu.miu.spring.boot.demo.repo.ExceptionRepo;
 import edu.miu.spring.boot.demo.repo.LoggerRepo;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -19,6 +21,8 @@ public class LoggerAspect {
 
     @Autowired
     LoggerRepo loggerRepo;
+    @Autowired
+    ExceptionRepo exceptionRepo;
 
     // Match the methods
     @Pointcut("execution( * edu.miu.spring.boot.demo.controller.*.*(..))")
@@ -52,8 +56,37 @@ public class LoggerAspect {
         logger.setOperation(operation);
         loggerRepo.save(logger);
 
-        System.out.println("Saved Logger to DB");
+        System.out.println("Saved Logger to DB: Logger");
         System.out.println(("======================================================="));
         return result;
+    }
+
+    @AfterThrowing(pointcut = "log()", throwing = "ex")
+    public void logAfterThrowing(Throwable ex){
+        System.out.println(("======================================================="));
+
+        // request info
+        HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder
+                .currentRequestAttributes())
+                .getRequest();
+
+        // attributes
+        String userName = "staticUser";
+        Principal authUser = request.getUserPrincipal();
+        if (authUser != null) userName = authUser.getName();
+        String operation = "";
+        String exceptionType = ex.getClass().getName();
+
+        // save
+        Exception exception = new Exception();
+        exception.setTransactionId(request.getHeader("transactionId"));
+        exception.setDateTime(LocalDateTime.now()); // current datetime
+        exception.setPrinciple(userName);
+        exception.setOperation(operation);
+        exception.setExceptionType(exceptionType);
+        exceptionRepo.save(exception);
+
+        System.out.println("Saved Logger to DB: Exception");
+        System.out.println(("======================================================="));
     }
 }

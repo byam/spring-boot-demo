@@ -1,5 +1,6 @@
 package edu.miu.spring.boot.demo.controller;
 
+import edu.miu.spring.boot.demo.aspect.annotation.ExecutionTime;
 import edu.miu.spring.boot.demo.domain.Comment;
 import edu.miu.spring.boot.demo.domain.Post;
 import edu.miu.spring.boot.demo.domain.User;
@@ -42,6 +43,7 @@ public class UserController{
 
     @RequestMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @ExecutionTime
     public User findById(@PathVariable int id){
         return userService.findById(id);
     }

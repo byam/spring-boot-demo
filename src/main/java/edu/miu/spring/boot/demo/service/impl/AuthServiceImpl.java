@@ -40,8 +40,7 @@ public class AuthServiceImpl implements AuthService {
 
         final String accessToken = jwtUtil.generateToken(userDetails);
         final String refreshToken = jwtUtil.generateRefreshToken(loginRequest.getEmail());
-        var loginResponse = new LoginResponse(accessToken, refreshToken);
-        return loginResponse;
+        return new LoginResponse(accessToken, refreshToken);
     }
 
     @Override

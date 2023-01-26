@@ -4,8 +4,10 @@ import edu.miu.spring.boot.demo.domain.Comment;
 import edu.miu.spring.boot.demo.domain.Post;
 import edu.miu.spring.boot.demo.entity.dto.PostDto;
 import edu.miu.spring.boot.demo.service.PostService;
+import edu.miu.spring.boot.demo.service.impl.AwesomeUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,8 +48,9 @@ public class PostController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void save(@RequestBody Post post){
-        postService.save(post);
+    public void save(@RequestBody Post post, Authentication authentication){
+        AwesomeUserDetails awesomeUserDetails = (AwesomeUserDetails) authentication.getPrincipal();
+        postService.save(post, awesomeUserDetails);
     }
 
     @DeleteMapping("{id}")

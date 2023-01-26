@@ -2,10 +2,12 @@ package edu.miu.spring.boot.demo.service.impl;
 
 import edu.miu.spring.boot.demo.domain.Comment;
 import edu.miu.spring.boot.demo.domain.Post;
+import edu.miu.spring.boot.demo.domain.User;
 import edu.miu.spring.boot.demo.entity.dto.PostDto;
 import edu.miu.spring.boot.demo.helper.ListMapper;
 import edu.miu.spring.boot.demo.repo.CommentRepo;
 import edu.miu.spring.boot.demo.repo.PostRepo;
+import edu.miu.spring.boot.demo.repo.UserRepo;
 import edu.miu.spring.boot.demo.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -20,6 +22,7 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
 
     private final PostRepo postRepo;
+    private final UserRepo userRepo;
     private final CommentRepo commentRepo;
 
     @Autowired
@@ -58,8 +61,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void save(Post post) {
+    public void save(Post post, AwesomeUserDetails awesomeUserDetails) {
+        User user = userRepo.findByEmail(awesomeUserDetails.getUsername());
+        post.setAuthor(user.getName());
+
         postRepo.save(post);
+
+        List<Post> posts = new ArrayList<>(user.getPosts());
+        posts.add(post);
+        user.setPosts(posts);
     }
 
     @Override

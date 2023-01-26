@@ -3,6 +3,7 @@ package edu.miu.spring.boot.demo.service;
 import edu.miu.spring.boot.demo.domain.Comment;
 import edu.miu.spring.boot.demo.domain.Post;
 import edu.miu.spring.boot.demo.entity.dto.PostDto;
+import edu.miu.spring.boot.demo.service.impl.AwesomeUserDetails;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public interface PostService {
 
     PostDto findByIdDto(int id);
 
-    void save(Post post);
+    void save(Post post, AwesomeUserDetails awesomeUserDetails);
 
     void delete(int id);
 

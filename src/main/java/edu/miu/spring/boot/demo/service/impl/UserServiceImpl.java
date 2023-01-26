@@ -2,7 +2,7 @@ package edu.miu.spring.boot.demo.service.impl;
 
 import edu.miu.spring.boot.demo.domain.Post;
 import edu.miu.spring.boot.demo.domain.User;
-import edu.miu.spring.boot.demo.dto.UserDto;
+import edu.miu.spring.boot.demo.entity.dto.UserDto;
 import edu.miu.spring.boot.demo.helper.ListMapper;
 import edu.miu.spring.boot.demo.repo.UserRepo;
 import edu.miu.spring.boot.demo.service.UserService;

@@ -24,7 +24,7 @@ public class User {
     @JoinColumn(name = "user_id")
     private List<Post> posts;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable
     private List<Role> roles;
 }

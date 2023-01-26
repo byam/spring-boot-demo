@@ -4,7 +4,7 @@ import edu.miu.spring.boot.demo.aspect.annotation.ExecutionTime;
 import edu.miu.spring.boot.demo.domain.Comment;
 import edu.miu.spring.boot.demo.domain.Post;
 import edu.miu.spring.boot.demo.domain.User;
-import edu.miu.spring.boot.demo.dto.UserDto;
+import edu.miu.spring.boot.demo.entity.dto.UserDto;
 import edu.miu.spring.boot.demo.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

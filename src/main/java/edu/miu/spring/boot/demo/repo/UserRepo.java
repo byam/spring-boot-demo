@@ -10,4 +10,6 @@ public interface UserRepo extends CrudRepository<User, Integer> {
 
     @Query("select u from User u where size(u.posts) >= :num")
     List<User> findUsersWithPosts(int num);
+
+    User findByEmail(String email);
 }

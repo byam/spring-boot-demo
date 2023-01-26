@@ -1,7 +1,7 @@
 package edu.miu.spring.boot.demo.service;
 
 import edu.miu.spring.boot.demo.domain.User;
-import edu.miu.spring.boot.demo.dto.UserDto;
+import edu.miu.spring.boot.demo.entity.dto.UserDto;
 
 import java.util.List;
 

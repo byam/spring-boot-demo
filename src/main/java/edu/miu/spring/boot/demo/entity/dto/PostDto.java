@@ -1,4 +1,4 @@
-package edu.miu.spring.boot.demo.dto;
+package edu.miu.spring.boot.demo.entity.dto;
 
 import lombok.Data;
 

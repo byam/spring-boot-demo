@@ -15,7 +15,7 @@ VALUES (1001, 'comment1', 101),
        (1004, 'comment4', 103),
        (1005, 'comment5', 104);
 
-INSERT INTO ROLE (id, name)
+INSERT INTO ROLE (id, role)
 VALUES (1, 'ADMIN'),
        (2, 'USER');
 

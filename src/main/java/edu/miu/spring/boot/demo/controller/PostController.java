@@ -2,7 +2,7 @@ package edu.miu.spring.boot.demo.controller;
 
 import edu.miu.spring.boot.demo.domain.Comment;
 import edu.miu.spring.boot.demo.domain.Post;
-import edu.miu.spring.boot.demo.dto.PostDto;
+import edu.miu.spring.boot.demo.entity.dto.PostDto;
 import edu.miu.spring.boot.demo.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

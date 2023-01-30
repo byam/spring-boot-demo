@@ -12,9 +12,8 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
     private final String secret = "top-secret";
-    private final long expiration = 5 * 60 * 60 * 60;
-    //     private final long expiration = 5;
-    private final long refreshExpiration = 5 * 60 * 60 * 60 * 60;
+    private final long TOKEN_EXPIRATION_MILLIS = 1000 * 60; // 60 seconds
+    private final long REFRESH_TOKEN_EXPIRATION_MILLIS = 1000 * 60 * 60; // 60 minutes
 
     // this wil extract a claim from a token, its used in the methods above to get the username and date
     // TODO When this detects the access token is expired it will throw and exception.
@@ -56,7 +55,7 @@ public class JwtUtil {
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_MILLIS))
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
@@ -66,7 +65,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .setSubject(subject)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_MILLIS))
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
@@ -75,7 +74,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + refreshExpiration))
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_MILLIS))
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
@@ -115,7 +114,7 @@ public class JwtUtil {
     public String doGenerateRefreshToken(Map<String, Object> claims, String subject) {
 
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_MILLIS))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 

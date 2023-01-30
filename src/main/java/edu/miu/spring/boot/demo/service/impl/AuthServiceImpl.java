@@ -15,12 +15,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class AuthServiceImpl implements AuthService {
 
-
+    private final long TOKEN_EXPIRATION_MILLIS = 1000 * 60; // 60 seconds
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
@@ -38,9 +40,10 @@ public class AuthServiceImpl implements AuthService {
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(result.getName());
 
-        final String accessToken = jwtUtil.generateToken(userDetails);
+        final Date expiration = new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_MILLIS);
+        final String accessToken = jwtUtil.generateToken(userDetails, expiration);
         final String refreshToken = jwtUtil.generateRefreshToken(loginRequest.getEmail());
-        return new LoginResponse(accessToken, refreshToken);
+        return new LoginResponse(accessToken, refreshToken, expiration);
     }
 
     @Override
@@ -54,9 +57,10 @@ public class AuthServiceImpl implements AuthService {
                 System.out.println("ACCESS TOKEN IS EXPIRED"); // TODO Renew is this case
             else
                 System.out.println("ACCESS TOKEN IS NOT EXPIRED");
-            final String accessToken = jwtUtil.doGenerateToken(jwtUtil.getSubject(refreshTokenRequest.getRefreshToken()));
+            final Date expiration = new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_MILLIS);
+            final String accessToken = jwtUtil.doGenerateToken(jwtUtil.getSubject(refreshTokenRequest.getRefreshToken()), expiration);
             final String refreshToken = jwtUtil.generateRefreshToken(jwtUtil.getUsernameFromToken(refreshTokenRequest.getRefreshToken()));
-            return new LoginResponse(accessToken, refreshToken);
+            return new LoginResponse(accessToken, refreshToken, expiration);
         }
         return new LoginResponse();
     }

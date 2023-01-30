@@ -44,28 +44,30 @@ public class JwtUtil {
     }
 
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails, Date expiration) {
         Map<String, Object> claims = new HashMap<>();
-        return doGenerateToken(claims, userDetails.getUsername());
+        return doGenerateToken(claims, userDetails.getUsername(), expiration);
     }
 
 
-    private String doGenerateToken(Map<String, Object> claims, String subject) {
+    private String doGenerateToken(Map<String, Object> claims, String subject, Date expiration) {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_MILLIS))
+//                .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_MILLIS))
+                .setExpiration(expiration)
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
 
     // Overridden to accommodate the refresh token
-    public String doGenerateToken( String subject) {
+    public String doGenerateToken( String subject, Date expiration) {
         return Jwts.builder()
                 .setSubject(subject)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_MILLIS))
+//                .setExpiration(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION_MILLIS))
+                .setExpiration(expiration)
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
